@@ -1,0 +1,371 @@
+/* Global chrome */
+* {
+  cursor: default;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  background: white;
+}
+
+::selection {
+  color: #fff;
+  background: #000;
+}
+
+/* Desktop background */
+.wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  justify-items: center;
+  background: linear-gradient(
+      45deg,
+      #000 25%,
+      transparent 25%,
+      transparent 75%,
+      #000 75%,
+      #000
+    ),
+    linear-gradient(
+      45deg,
+      #000 25%,
+      transparent 25%,
+      transparent 75%,
+      #000 75%,
+      #000
+    );
+  background-color: #fff;
+  background-size: 4px 4px;
+  background-position: 0 0, 2px 2px;
+  background-attachment: fixed;
+}
+
+/* Old Mac quick multi-flash (borrowed from reference) */
+@-webkit-keyframes blinky {
+  0% {
+    color: #000;
+    background: #fff;
+  }
+  100% {
+    color: #fff;
+    background: #000;
+  }
+}
+.clickyblinky {
+  -webkit-animation-name: blinky;
+  -webkit-animation-iteration-count: 3;
+  -webkit-animation-timing-function: cubic-bezier(1, 0, 0, 1);
+  -webkit-animation-duration: 0.1s;
+  border-radius: 6px;
+}
+
+/* Button flash feedback on click (matches reference quick flash) */
+@keyframes click-flash {
+  0% {
+    background: #fff;
+    color: #000;
+  }
+  100% {
+    background: #000;
+    color: #fff;
+  }
+}
+.clickyblinky {
+  animation: click-flash 0.1s cubic-bezier(1, 0, 0, 1) 0s 1 alternate;
+}
+
+/* Window + panes */
+.window {
+  width: 100%;
+  max-width: 512px;
+  box-shadow: 2px 2px 0 -1px #000;
+}
+
+.window-body {
+  /* Match ImageDitherer spacing */
+  padding: 8px;
+  position: relative;
+}
+
+.window .window-pane {
+  padding: 0 8px;
+  padding-bottom: 8px;
+}
+
+/* Canvas presentation */
+.dither-canvas {
+  border: 2px inset #c0c0c0;
+  background: #fff;
+  image-rendering: pixelated;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Inner layout spacing wrappers (match reference three sections) */
+.content-row {
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.slider-well {
+  /* Match ImageDitherer slider section */
+  border: 4px double black;
+  padding: 8px 16px;
+  height: 300px;
+  margin: 0;
+}
+
+.imagewell {
+  /* Match ImageDitherer image section */
+  border: 4px double black;
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  height: 100%;
+  width: 350px;
+  margin: 0;
+  padding: 8px;
+}
+
+.bottom-controls {
+  /* Match ImageDitherer bottom section spacing */
+  margin-top: 8px;
+  border: 4px double #000;
+  padding: 8px;
+}
+
+/* Title bar stripes and centered title (mimics React app) */
+.retro-titlebar {
+  position: relative;
+  height: 28px;
+  border-bottom: 1px solid #000;
+}
+.btn {
+  line-height: 22px; /* make buttons taller similar to RetroButton */
+  padding-top: 4px;
+  padding-bottom: 4px;
+  font-weight: normal;
+}
+.retro-bars {
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  top: 6px;
+  height: 16px;
+  background: linear-gradient(#000 1px, transparent 1px) top 0 left 0 / 100% 1px
+      no-repeat,
+    linear-gradient(#000 1px, transparent 1px) top 6px left 0 / 100% 1px
+      no-repeat,
+    linear-gradient(#000 1px, transparent 1px) top 12px left 0 / 100% 1px
+      no-repeat,
+    linear-gradient(#000 1px, transparent 1px) top 3px left 0 / 100% 1px
+      no-repeat,
+    linear-gradient(#000 1px, transparent 1px) top 9px left 0 / 100% 1px
+      no-repeat,
+    linear-gradient(#000 1px, transparent 1px) top 15px left 0 / 100% 1px
+      no-repeat;
+}
+.retro-title {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 0 8px;
+  font-family: "Chicago", monospace;
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: normal;
+  background: #fff;
+}
+
+/* Progress bar matching reference */
+.progressbar {
+  margin-top: 4px;
+  float: left;
+  width: 150px;
+  height: 16px;
+  border: 1px solid #000;
+  background: #fff;
+}
+
+.progressbar .progresslevel {
+  background: linear-gradient(
+      45deg,
+      #000 25%,
+      transparent 25%,
+      transparent 75%,
+      #000 75%,
+      #000
+    ),
+    linear-gradient(
+      45deg,
+      #000 25%,
+      transparent 25%,
+      transparent 75%,
+      #000 75%,
+      #000
+    );
+  background-color: #fff;
+  background-size: 4px 4px;
+  background-position: 0 0, 2px 2px;
+  width: 0%;
+  height: 100%;
+}
+
+/* Vertical slider visuals to match VerticalRetroSlider reference */
+.mac-slider-vertical {
+  width: 24px;
+  height: 200px;
+  margin: 0 4px;
+  border: 1.5px solid #000;
+  background: #fff;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+
+.mac-slider-fill-vertical {
+  width: 100%;
+  background: linear-gradient(
+      45deg,
+      #000 25%,
+      transparent 25%,
+      transparent 75%,
+      #000 75%,
+      #000
+    ),
+    linear-gradient(
+      45deg,
+      #000 25%,
+      transparent 25%,
+      transparent 75%,
+      #000 75%,
+      #000
+    );
+  background-color: #fff;
+  background-size: 4px 4px;
+  background-position: 0 0, 2px 2px;
+  height: 0%;
+  pointer-events: none;
+  position: absolute;
+  bottom: 0;
+}
+
+.mac-slider-thumb-vertical {
+  position: absolute;
+  left: -1.5px;
+  width: 23px;
+  height: 23px;
+  background: #fff;
+  border: 1.5px solid #000;
+  cursor: grab;
+  transform: translateY(50%);
+  user-select: none;
+  box-shadow: 2px 2px 0 -1px #000;
+}
+
+.mac-slider-thumb-vertical:active {
+  cursor: grabbing;
+}
+
+.mac-slider-vertical:disabled,
+.mac-slider-vertical[disabled] {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.mac-slider-vertical:disabled .mac-slider-thumb-vertical,
+.mac-slider-vertical[disabled] .mac-slider-thumb-vertical {
+  cursor: default;
+}
+
+/* Decorative retro scrollbar at right similar to reference */
+.image-column {
+  position: relative;
+  padding-right: 32px; /* Reserve space for scrollbar + gap */
+}
+
+.image-column .retro-scrollbar {
+  position: absolute;
+  right: 8px; /* Match the 8px gap between slider and image wells */
+  top: 0;
+  bottom: 0;
+  width: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.retro-scrollbar .arrow-up,
+.retro-scrollbar .arrow-down {
+  width: 100%;
+  height: 18px;
+  border: 1px solid #000;
+  background: #fff;
+  box-shadow: 2px 2px 0 -1px #000;
+  position: relative;
+}
+.retro-scrollbar .track {
+  flex: 1;
+  width: 100%;
+  margin: 4px 0;
+  border: 1px solid #000;
+  background: linear-gradient(
+      45deg,
+      #000 25%,
+      transparent 25%,
+      transparent 75%,
+      #000 75%,
+      #000
+    ),
+    linear-gradient(
+      45deg,
+      #000 25%,
+      transparent 25%,
+      transparent 75%,
+      #000 75%,
+      #000
+    );
+  background-color: #fff;
+  background-size: 4px 4px;
+  background-position: 0 0, 2px 2px;
+}
+
+.retro-scrollbar .arrow-up:after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -40%);
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 6px solid #000;
+}
+
+.retro-scrollbar .arrow-down:after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -60%);
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 6px solid #000;
+}

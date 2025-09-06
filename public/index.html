@@ -1,12 +1,135 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Hello, World!</title>
-	</head>
-	<body>
-		<h1 id="heading">Hello, World!</h1>
-		<p>This page comes from a static asset stored at `public/index.html` as configured in `wrangler.jsonc`.</p>
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Atkinson Dither</title>
+    <link rel="stylesheet" href="https://unpkg.com/@sakun/system.css" />
+    <link rel="stylesheet" href="./styles/custom.css" />
+  </head>
+  <body>
+    <!-- Progressive enhancement with Alpine.js -->
+    <div class="wrapper">
+      <div
+        x-data="ditherApp()"
+        class="window"
+        style="max-width: 512px; width: 100%"
+      >
+      <div class="title-bar retro-titlebar">
+        <div class="retro-bars"></div>
+        <h1 class="retro-title">Atkinson dither</h1>
+      </div>
+
+      <div class="window-body" style="position: relative;">
+        <!-- Main layout: slider on the left, image well on the right -->
+        <div class="content-row" style="display: flex; gap: 8px; align-items: flex-start; min-height: 300px; position: relative;">
+          <!-- Left: Vertical threshold slider -->
+          <div
+            class="slider-well"
+            style="
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              min-width: 60px;
+            "
+          >
+            <div
+              style="
+                margin-bottom: 10px;
+                font-size: 11px;
+                text-align: center;
+                width: 100%;
+              "
+            >
+              <strong>255</strong>
+            </div>
+            <vertical-slider
+              x-bind:value="ditherValue"
+              min="0"
+              max="255"
+              height="200"
+              x-bind:disabled="!imageLoaded ? '' : null"
+              @change="ditherValue = $event.detail.value; updateDither()"
+            ></vertical-slider>
+            <div
+              style="
+                margin-top: 10px;
+                font-size: 12px;
+                text-align: center;
+                width: 100%;
+              "
+            >
+              <strong>0</strong>
+            </div>
+            <div
+              style="
+                margin-top: 5px;
+                font-size: 12px;
+                text-align: center;
+                width: 100%;
+              "
+              x-text="ditherValue"
+            ></div>
+          </div>
+
+          <!-- Right: Image well with uploader or canvas -->
+          <div class="image-column" style="flex: 1;">
+            <div class="imagewell" style="min-height: 300px;">
+              <template x-if="!imageLoaded">
+                <image-uploader
+                  @upload="handleImageUpload($event)"
+                ></image-uploader>
+              </template>
+
+              <template x-if="imageLoaded">
+                <dither-canvas
+                  :image-data="imageData"
+                  :dither-value="appliedDitherValue"
+                  @dither-start="isProcessing = true; progress = 0"
+                  @dither-progress="progress = $event.detail.progress"
+                  @dither-complete="isProcessing = false; progress = 0; if (hasPending) { appliedDitherValue = ditherValue; hasPending = false }"
+                ></dither-canvas>
+              </template>
+            </div>
+            <!-- Decorative retro scrollbar aligned to image column, outside imagewell -->
+            <div class="retro-scrollbar" aria-hidden="true">
+              <div class="arrow-up"></div>
+              <div class="track"></div>
+              <div class="arrow-down"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom controls: progress + Trash/Save -->
+        <div class="bottom-controls" style="display: flex; align-items: center; justify-content: space-between; box-sizing: border-box; width: 100%;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-right: 12px; flex: 1; min-width: 0;">
+            <template x-if="isProcessing">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="font-size: 16px;">Processing...</div>
+                <div class="progressbar" style="margin: 0; width: 120px;">
+                  <div class="progresslevel" x-bind:style="{ width: progress + '%' }"></div>
+                </div>
+                <div style="font-size: 10px;" x-text="progress + '%' "></div>
+              </div>
+            </template>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center; flex-shrink: 0;">
+            <button class="btn" x-show="imageLoaded" :disabled="isProcessing || !imageLoaded" @click="resetImage">Trash</button>
+            <button class="btn btn-default" :disabled="isProcessing || !imageLoaded" @click="saveImage">Save</button>
+          </div>
+        </div>
+
+      </div>
+      </div>
+
+    <!-- Scripts -->
+    <script
+      src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"
+      defer
+    ></script>
+    <script src="./app.js"></script>
+    <script src="./components/image-uploader.js"></script>
+    <script src="./components/vertical-slider.js"></script>
+    <script type="module" src="./components/dithering-canvas.js"></script>
+  </body>
 </html>
